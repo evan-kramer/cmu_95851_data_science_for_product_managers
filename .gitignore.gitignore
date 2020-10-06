@@ -1,8 +1,8 @@
-# Assignment details
-*.docx
-*.pdf
-*.csv
-*.xlsx
+# Assignment details - a .gitignore only pushes the filetypes specified in the .gitignore
+# *.docx
+# *.pdf
+# *.csv
+# *.xlsx
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
