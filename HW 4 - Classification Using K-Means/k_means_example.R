@@ -14,5 +14,3 @@ data = full_join(read_excel('orders.xlsx'),
          price.cat = if_else(price >= median(price, na.rm = T), 'high', 'low'))
 
 # K-means clustering
-
-print(data)
