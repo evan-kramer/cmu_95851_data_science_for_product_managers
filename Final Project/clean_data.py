@@ -5,7 +5,6 @@ evankram
 10/23/2020
 '''
 # Import modules
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import re
@@ -67,38 +66,39 @@ names_clean10 = pd.merge(pd.DataFrame(names10),
 names_clean11 = pd.merge(pd.DataFrame(names11),
                          names_clean.varname_short[names_clean.varname_clean11.notnull()].reset_index().drop(columns = 'index'),
                          how = 'left', left_index = True, right_index = True)
+
+# Output clean files
 (dds9.rename(columns = {dds9.columns[i]:names_clean9.varname_short[i] for i in range(len(names9))})
  .to_csv('dds9_clean.csv', index = False))
 (dds10.rename(columns = {dds10.columns[i]:names_clean10.varname_short[i] for i in range(len(names10))})
- .to_csv('dds10_clean.csv'))
+ .to_csv('dds10_clean.csv', index = False))
 (dds11.rename(columns = {dds11.columns[i]:names_clean11.varname_short[i] for i in range(len(names11))})
- .to_csv('dds11_clean.csv'))
+ .to_csv('dds11_clean.csv', index = False))
 
+# For DDS9, make small/large smartphone/tablet and laptop/tablet hybrid questions all one
+dds9_clean = pd.read_csv('dds9_clean.csv')
+(dds9_clean
+ .assign(
+     own_laptop = np.where((dds9_clean.own_laptop == 'Yes') | (dds9_clean.own_laptop_tablet_hybrid == 'Yes'),
+                           'Yes', 'No'),
+     plan_to_purchase_laptop = np.where((dds9_clean.plan_to_purchase_laptop == 'Yes') | (dds9_clean.plan_to_purchase_laptop_tablet_hybrid == 'Yes'),
+                                         'Yes', 'No'),
+     value_rank_laptop = np.where(dds9_clean.value_rank_laptop > dds9_clean.value_rank_laptop_tablet_hybrid, 
+                                  dds9_clean.value_rank_laptop, dds9_clean.value_rank_laptop_tablet_hybrid),
+     own_tablet = np.where((dds9_clean.own_tablet == 'Yes') | (dds9_clean.own_tablet_small == 'Yes'),
+                           'Yes', 'No'),
+     plan_to_purchase_tablet = np.where((dds9_clean.plan_to_purchase_tablet == 'Yes') | (dds9_clean.plan_to_purchase_tablet_small == 'Yes'),
+                                        'Yes', 'No'),
+     value_rank_tablet = np.where(dds9_clean.value_rank_tablet > dds9_clean.value_rank_tablet_small, 
+                                  dds9_clean.value_rank_tablet, dds9_clean.value_rank_tablet_small),
+     own_smartphone = np.where((dds9_clean.own_smartphone == 'Yes') | (dds9_clean.own_smartphone_large == 'Yes'), 
+                                     'Yes', 'No'),
+     plan_to_purchase_smartphone = np.where((dds9_clean.plan_to_purchase_smartphone == 'Yes') | (dds9_clean.plan_to_purchase_smartphone_large == 'Yes'),
+                                            'Yes', 'No'),
+     value_rank_smartphone = np.where(dds9_clean.value_rank_smartphone > dds9_clean.value_rank_smartphone_large,
+                                      dds9_clean.value_rank_smartphone, dds9_clean.value_rank_smartphone_large)
+ )
+ .drop(columns = dds9_clean.columns[dds9_clean.columns.str.contains('hybrid|large|small')])
+).to_csv('dds9_clean.csv', index = False)
 
-
-
-# Concatenate data the data are cross-sectional (2009, 2010, 2011)
-# Crosswalk names
-# Design question
-# Exploratory data analysis
-# How have ownership/plan to purchase rates changed over time?
-
-
-# Plots
-
-
-
-# True for own, plan to purchase, and value_rank
-# Will need to combine tablet small and large (2009 has them separate, 2010 combined)
-# Tablet is one category instead of three in 2010 (unlike 2009)
-# Same thing with smartphone; large and small is one in 2010, but not in 2009
-# Digital antenna is a new one for 2010 as well
-# Smart glasses in 2009 (not in 2010), VR headset in 2010 (not in 2009)
-# 3d printer in 2009 (not in 2010), drone in 2010 (not in 2009)
-# Digital TV antenna in 2010 but not in 2009
-# Add app use dating, messaging, mobile payment, education, tickets, reservations, hobbies in 2010
-# Add tv_on_demand in place of tv_rent_download
-# Transform rank values to 1-3? 
-
-# Questions vary by year; combine, drop, and standardize
-
+# For DDS11, convert str to categorical variables for random forest classifier
