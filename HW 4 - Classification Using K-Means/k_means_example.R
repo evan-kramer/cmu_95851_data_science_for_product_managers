@@ -1,5 +1,6 @@
 # https://www.business-science.io/business/2016/08/07/CustomerSegmentationPt1.html
 library(readxl); library(tidyverse)
+setwd("C:/Users/evan.kramer/Documents/CMU/Courses/2020-03/95851 - Making Products Count, Data Science for Product Managers/Assignments/HW 4 - Classification Using K-Means/")
 # Prep data
 data = full_join(read_excel('orders.xlsx'),
                  read_excel('bikes.xlsx'),
@@ -14,3 +15,8 @@ data = full_join(read_excel('orders.xlsx'),
          price.cat = if_else(price >= median(price, na.rm = T), 'high', 'low'))
 
 # K-means clustering
+data
+
+ggplot(data, aes(x = category, y = category2, fill = frame)) + 
+  geom_bar() +
+  facet_grid(rows = frame)
