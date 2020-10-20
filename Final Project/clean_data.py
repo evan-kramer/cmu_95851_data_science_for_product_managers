@@ -102,3 +102,10 @@ dds9_clean = pd.read_csv('dds9_clean.csv')
 ).to_csv('dds9_clean.csv', index = False)
 
 # For DDS11, convert str to categorical variables for random forest classifier
+dds11_clean = pd.read_csv('dds11_clean.csv')
+
+# Convert categorical to numeric
+dds11_clean = dds11_clean.astype('category')
+for v in dds11_clean.columns: 
+    if dds11_clean[v].value_counts().sort_index() == 
+dds11_clean.to_csv('dds11_clean.csv', index = False)
