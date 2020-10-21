@@ -43,7 +43,6 @@ for v in dds11_clean.columns:
     except:
         pass
 
-
 # How have ownership rates, plan to purchase, etc. changed over time? 
 # Look at rates over time for yes/no responses
 pct_changes = {}
@@ -157,7 +156,7 @@ plt.plot(temp3.index, temp3.Yes, marker = 'o', label = 'Have internet subscripti
 plt.plot(temp4.index, temp4.Yes, marker = 'o', label = 'Plan to purchase smartphone')
 plt.xticks(np.arange(2009, 2012))
 plt.yticks(np.arange(0, 101, 10))
-plt.legend()
+plt.legend(loc = 'upper center')
 plt.savefig('Visualizations/cord_cutting.png', dpi = 900)
 
 # Perceptions of ads
@@ -195,8 +194,78 @@ for v in ['age_cat', 'gender', 'region', 'employment_status', 'race_ethnicity',
                  .title())
     ax.set_xlabel('Percentage')
     plt.savefig('Visualizations/' + v + '.png', dpi = 900)
+    
+# Outcome variables
+outcomes = {}
+for v in ['plan_to_purchase_smartwatch', 'plan_to_purchase_fitness_band']:
+    outcomes[v] = (dds11_clean[v].value_counts().sort_index() / 
+                    dds11_clean[v].count() * 100)
+outcomes = pd.DataFrame(outcomes).transpose().sort_values('No')
+fig = plt.figure(figsize = 1.5 * np.array([9.32, 3.74]))
+ax = fig.add_subplot(111)
+ax.barh(outcomes.index.str.replace('plan_to_purchase_', '').str.replace('_', ' ').str.title(), 
+        outcomes.No, align = 'center', height = .75, label = 'No')
+ax.barh(outcomes.index.str.replace('plan_to_purchase_', '').str.replace('_', ' ').str.title(), 
+        outcomes.Yes, align = 'center', height = .75, left = outcomes.No, 
+        label = 'Yes')
+ax.set_yticks(outcomes.index.str.replace('plan_to_purchase_', '').str.replace('_', ' ').str.title())
+ax.set_xlabel('Percentage')
+ax.set_title('Plan to Purchase Wearables')
+ax.legend()
+plt.savefig('Visualizations/wearables_unbalanced.png')
 
-# 
+# App use
+app_use = {}
+for v in dds11_clean.filter(regex = 'everyday_app').columns:
+    app_use[v] = dds11_clean[v].value_counts().sort_index() / dds11_clean[v].count() * 100
+app_use = pd.DataFrame(app_use).transpose().sort_values('No')
+fig = plt.figure(figsize = 1.5 * np.array([6.4, 4.8]))
+ax = fig.add_subplot(111)
+ax.barh(app_use.index.str.replace('everyday_app_use_', '').str.replace('_', ' ').str.title(), 
+        app_use.No, align = 'center', height = .75, label = 'No')
+ax.barh(app_use.index.str.replace('everyday_app_use_', '').str.replace('_', ' ').str.title(), 
+        app_use.Yes, align = 'center', height = .75, left = app_use.No, 
+        label = 'Yes')
+ax.set_yticks(app_use.index.str.replace('everyday_app_use_', '').str.replace('_', ' ').str.title())
+ax.set_xlabel('Percentage')
+ax.set_title('App Use')
+ax.grid(True)
+ax.legend()
+plt.savefig('Visualizations/app_use.png')
+
+# Streaming
+streaming = {}
+for v in dds11_clean.filter(regex = 'subscription_stream_').columns:
+    streaming[v] = (dds11_clean[v].value_counts().sort_index() / 
+                    dds11_clean[v].count() * 100)
+streaming = pd.DataFrame(streaming).transpose().sort_values('No')
+fig = plt.figure(figsize = 1.75 * np.array([9.32, 3.74]))
+ax = fig.add_subplot(111)
+ax.barh(streaming.index.str.replace('_', ' ').str.title(), 
+        streaming.No, align = 'center', height = .75, label = 'No')
+ax.barh(streaming.index.str.replace('_', ' ').str.title(), 
+        streaming.Yes, align = 'center', height = .75, left = streaming.No, 
+        label = 'Yes')
+ax.set_yticks(streaming.index.str.replace('everyday_app_use_', '').str.replace('_', ' ').str.title())
+ax.set_xlabel('Percentage')
+ax.set_title('Streaming Subscriptions')
+ax.legend()
+plt.savefig('Visualizations/streaming.png')
+
+# News vehicle
+v = 'most_frequent_news_vehicle'
+fig, ax = plt.subplots()
+ax.barh(dds11_clean[v].value_counts().index,
+        dds11_clean[v].value_counts() / dds11_clean[v].count() * 100,
+        align = 'center')
+ax.set_yticks(dds11_clean[v].value_counts().index)
+ax.set_title(v.replace('vehicle', 'outlet').replace('_', ' ').title())
+ax.set_xlabel('Percentage')
+plt.show()
+plt.savefig('Visualizations/news_outlet.png', dpi = 450)
+
+
+    
 '''
 category_names = ['Strongly disagree', 'Disagree',
                   'Neither agree nor disagree', 'Agree', 'Strongly agree']
