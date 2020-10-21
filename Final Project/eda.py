@@ -103,6 +103,7 @@ for v in ['age_cat', 'gender', 'region', 'employment_status', 'race_ethnicity']:
 
 # Visualizations
 # Rise of wearables
+plt.figure()
 temp1 = dds_long.groupby('year')['plan_to_purchase_smartwatch'].value_counts().unstack()
 temp1['Total'] = temp1.Yes + temp1.No
 temp1['Yes'] = temp1.Yes / temp1.Total * 100
@@ -118,6 +119,7 @@ plt.yticks(np.arange(0, 101, 10))
 plt.legend()
 plt.savefig('Visualizations/smartwatch.png', dpi = 900)
 
+plt.figure()
 temp1 = dds_long.groupby('year')['plan_to_purchase_fitness_band'].value_counts().unstack()
 temp1['Total'] = temp1.Yes + temp1.No
 temp1['Yes'] = temp1.Yes / temp1.Total * 100
@@ -134,6 +136,7 @@ plt.legend()
 plt.savefig('Visualizations/fitness_band.png', dpi = 900)
 
 # Cord cutting
+plt.figure()
 temp1 = dds_long.groupby('year')['own_tv'].value_counts().unstack()
 temp1['Total'] = temp1.Yes + temp1.No
 temp1['Yes'] = temp1.Yes / temp1.Total * 100
