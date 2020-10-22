@@ -58,8 +58,9 @@ for v in X.columns:
 X_train, X_test, Y_train, Y_test = {}, {}, {}, {}
 pattern = 'subscription_stream|vehicle'
 pattern = 'everyday_app'
-pattern = 'gender|age_cat|region|employment|children|income|fold'
 pattern = 'news'
+pattern = 'gender|age_cat|region|employment|children|income|fold'
+
 
 X_train['plan_to_purchase_smartwatch'] = (X_up_sw[X_up_sw.fold >= 2]
                                             .filter(regex = pattern)
@@ -101,7 +102,7 @@ for v in ['plan_to_purchase_smartwatch', 'plan_to_purchase_fitness_band']:
     '''
     
     # Random forest
-    max_depth = 4
+    max_depth = None
     clf = ensemble.RandomForestClassifier(max_depth = max_depth) # set max depth to interpret
     clf.fit(X_train[v], Y_train[v][v])
     
@@ -163,12 +164,17 @@ for v in ['plan_to_purchase_smartwatch', 'plan_to_purchase_fitness_band']:
     plt.savefig('Visualizations/aurocc_' + v + '.png')
 
     # Market segments and sizing
+    plt.figure()
     dds11_clean.most_frequent_news_vehicle.hist(by = dds11_clean[v], sharex = True)
+    plt.savefig('Visualizations/by_news_outlet_' + v)
     dds11_clean.subscription_stream_music.hist(by = dds11_clean[v], sharex = True)
+    plt.figure()
     dds11_clean.income_cat.hist(by = dds11_clean[v], sharex = True, align = 'left')
+    plt.savefig('Visualizations/by_income_' + v)
     dds11_clean.age_cat.hist(by = dds11_clean[v], sharex = True, align = 'left')
     dds11_clean.gender.hist(by = dds11_clean.plan_to_purchase_smartwatch, sharex = True)
-    dds11_clean.everyday_app_use_fitness_health.hist(by = dds11_clean.plan_to_purchase_smartwatch, sharex = True)
+    dds11_clean.everyday_app_use_fitness_health.hist(by = dds11_clean[v], sharex = True)
+    
 # K-means clustering and calculate group tendencies?
 '''
 lower_limit = 1

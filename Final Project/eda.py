@@ -99,8 +99,6 @@ for v in ['age_cat', 'gender', 'region', 'employment_status', 'race_ethnicity']:
     ax.set_title(v.replace('_', ' ').title())
     plt.show()
 
-# Check for balanced classes
-
 # Visualizations
 # Rise of wearables
 plt.figure()
@@ -130,6 +128,22 @@ temp2['Yes'] = temp2.Yes / temp2.Total * 100
 temp2['No'] = temp2.No / temp2.Total * 100
 plt.plot(temp1.index, temp1.Yes, marker = 'o', label = 'Plan to purchase fitness band')
 plt.plot(temp2.index, temp2.Yes, marker = 'o', label = 'Own fitness band')
+plt.xticks(np.arange(2009, 2012))
+plt.yticks(np.arange(0, 101, 10))
+plt.legend()
+plt.savefig('Visualizations/fitness_band.png', dpi = 900)
+
+plt.figure()
+temp1 = dds_long.groupby('year')['plan_to_purchase_vr_headset'].value_counts().unstack()
+temp1['Total'] = temp1.Yes + temp1.No
+temp1['Yes'] = temp1.Yes / temp1.Total * 100
+temp1['No'] = temp1.No / temp1.Total * 100
+temp2 = dds_long.groupby('year')['own_vr_headset'].value_counts().unstack()
+temp2['Total'] = temp2.Yes + temp2.No
+temp2['Yes'] = temp2.Yes / temp2.Total * 100
+temp2['No'] = temp2.No / temp2.Total * 100
+plt.plot(temp1.index, temp1.Yes, marker = 'o', label = 'Plan to purchase VR headset')
+plt.plot(temp2.index, temp2.Yes, marker = 'o', label = 'Own VR headset')
 plt.xticks(np.arange(2009, 2012))
 plt.yticks(np.arange(0, 101, 10))
 plt.legend()
@@ -267,8 +281,6 @@ ax.set_xlabel('Percentage')
 plt.show()
 plt.savefig('Visualizations/news_outlet.png', dpi = 450)
 
-
-    
 '''
 category_names = ['Strongly disagree', 'Disagree',
                   'Neither agree nor disagree', 'Agree', 'Strongly agree']
